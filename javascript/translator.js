@@ -93,10 +93,11 @@ function translateToBraille(text) {
     if (/[A-Z]/.test(char)) {
       result +=
         brailleDictionary["capital"] + brailleDictionary[char.toLowerCase()];
+      isNumberMode = false; // Reset number mode after a letter
     } else if (/[0-9]/.test(char)) {
       if (!isNumberMode) {
         result += brailleDictionary["number"];
-        isNumberMode = true;
+        isNumberMode = true; // Set number mode
       }
       result += brailleDictionary[char];
     } else if (char === " ") {
@@ -104,15 +105,16 @@ function translateToBraille(text) {
       isNumberMode = false; // Reset number mode after space
     } else {
       result += brailleDictionary[char];
+      isNumberMode = false; // Reset number mode after a letter
     }
   }
   return result;
 }
 
 function translateToEnglish(braille) {
-  validateBrailleInput(braille); // Validate the Braille input
+  validateBrailleInput(braille); // Validate the braille input
   let result = "";
-  let chars = braille.match(/.{1,6}/g); // Split the Braille input into pieces of 6
+  let chars = braille.match(/.{1,6}/g); // Split the braille input into pieces of 6
   let isCapitalMode = false;
   let isNumberMode = false;
 
@@ -138,7 +140,7 @@ function translateToEnglish(braille) {
 
 // Main function to handle input & output
 function main() {
-  const input = process.argv[2];
+  const input = process.argv.slice(2).join(" "); // Join all input arguments as a single string
   try {
     if (isBraille(input)) {
       console.log(translateToEnglish(input));
